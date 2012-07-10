@@ -1,4 +1,6 @@
 #include <Adafruit_WS2801.h>
+#include <Audio_monitor.h>
+#include <MsTimer2.h>
 #include <SPI.h>
 
 int dataPin  = 2;
@@ -13,9 +15,11 @@ strip.show();
 }
 
 void loop(){
+  /*
 colorWipe(Color(255, 0, 0), 50);  // red fill
 colorWipe(Color(0, 255, 0), 50);  // green fill
-colorWipe(Color(0, 0, 255), 50);  // blue fill
+colorWipe(Color(0, 0, 255), 50);  // blue fill*/
+
 
 rainbowCycle(20);
 
@@ -33,6 +37,11 @@ void rainbowCycle(uint8_t wait) {
       strip.setPixelColor(i, Wheel( ((i * 256 / strip.numPixels()) + j)% 256) );
     }
     strip.show();   // write all the pixels out
+    
+    // calculate delay based on current audio level
+    const Audio_monitor& monitor = Audio_monitor::instance();
+    wait = (1023 - monitor.get_amplitude()) / 10;
+    
     delay(wait);
   }
 }
