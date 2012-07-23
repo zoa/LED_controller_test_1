@@ -39,8 +39,13 @@ void rainbowCycle(uint8_t wait) {
     strip.show();   // write all the pixels out
     
     // calculate delay based on current audio level
-    const Audio_monitor& monitor = Audio_monitor::instance();
+    Audio_monitor& monitor = Audio_monitor::instance();
     wait = (1023 - monitor.get_amplitude()) / 10;
+    
+    if ( monitor.is_anomolously_loud() )
+    {
+      colorWipe( Color(255, 0, 0), 50 );
+    }
     
     delay(wait);
   }
